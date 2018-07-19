@@ -14,6 +14,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 样式设置模板
+ */
 public class FontSytlePanel extends LinearLayout {
     @BindView(R.id.btn_bold)
     Button btn_bold;
