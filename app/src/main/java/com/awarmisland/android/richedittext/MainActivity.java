@@ -1,5 +1,7 @@
 package com.awarmisland.android.richedittext;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -39,8 +41,24 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
     }
 
     @Override
-    public void setStreak(boolean isStreak) {
-        richEditText.setStreak(isStreak);
+    public void setStreak(boolean isStreak) { richEditText.setStreak(isStreak); }
+
+
+    @Override
+    public void insertImg() {
+        Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+        getAlbum.setType("image/*");
+        startActivityForResult(getAlbum, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            Uri originalUri = data.getData(); // 获得图片的uri
+            String path = originalUri.getPath();
+            richEditText.setImg(path);
+        }
     }
 
     /**
@@ -59,6 +77,5 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
      */
     @Override
     public void onSelect(int start, int end) {
-
     }
 }

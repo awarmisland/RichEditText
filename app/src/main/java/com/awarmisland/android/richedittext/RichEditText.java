@@ -1,7 +1,9 @@
 package com.awarmisland.android.richedittext;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.style.CharacterStyle;
@@ -11,6 +13,11 @@ import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +68,9 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         if(fontStyle.isUnderline){
             getEditableText().setSpan(new UnderlineSpan(),style_start,style_start,INCLUD_INCLUD_MODE);
         }
+        if(fontStyle.isStreak){
+            getEditableText().setSpan(new StrikethroughSpan(),style_start,style_start,INCLUD_INCLUD_MODE);
+        }
         if(onSelectChangeListener!=null){
             onSelectChangeListener.onSelect(start,start);
             onSelectChangeListener.onFontStyleChang(fontStyle);
@@ -74,69 +84,123 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
     public void setUnderline(boolean isUnderline){
         setUnderlineSpan(isUnderline);
     }
-    public void setStreak(boolean isStreak){
-
+    public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
+    public void setImg(String path){
+        final Uri uri = Uri.parse(path);
+        final int maxWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher);
+        glideRequests.asBitmap()
+                .load(new File(path))
+                .apply(options)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        Bitmap bitmap = zoomBitmapToFixWidth(resource, maxWidth);
+                        image(uri, bitmap);
+                    }
+                });
     }
-
     /**
      * bold italic
      * @param isSet
      * @param type
      */
     private void setStyleSpan(boolean isSet,int type){
-        int start = getSelectionStart();
-        int end = getSelectionEnd();
-        int mode = EXCLUD_INCLUD_MODE;
-        StyleSpan[] styles = getEditableText().getSpans(start,end,StyleSpan.class);
-        List<Part> parts = new ArrayList<>();
-        for(StyleSpan styleSpan : styles){
-            if (styleSpan.getStyle() == type) {
-                parts.add(new Part(getEditableText().getSpanStart(styleSpan),getEditableText().getSpanEnd(styleSpan)));
-                getEditableText().removeSpan(styleSpan);
-            }
+        FontStyle fontStyle = new FontStyle();
+        if(type==Typeface.BOLD){
+            fontStyle.isBold=true;
+        }else if(type==Typeface.ITALIC){
+            fontStyle.isItalic=true;
         }
-        for(Part part : parts){
-            if(part.start<start){
-                if(start==end){mode=EXCLUD_MODE;}
-                getEditableText().setSpan(new StyleSpan(type),part.start,start,mode);
-            }
-            if(part.end>end){
-                getEditableText().setSpan(new StyleSpan(type),end,part.end,mode);
-            }
-        }
-        if(isSet){
-            if(start==end){
-                mode=INCLUD_INCLUD_MODE;
-            }
-            getEditableText().setSpan(new StyleSpan(type),start,end,mode);
-        }
+        setSpan(fontStyle,isSet,StyleSpan.class);
     }
+
+    /**
+     * underline
+     * @param isSet
+     */
     private void setUnderlineSpan(boolean isSet){
+        FontStyle fontStyle = new FontStyle();
+        fontStyle.isUnderline=true;
+        setSpan(fontStyle,isSet,UnderlineSpan.class);
+    }
+
+    /**
+     * Strikethrough
+     * @param isSet
+     */
+    private void setStreakSpan(boolean isSet){
+        FontStyle fontStyle = new FontStyle();
+        fontStyle.isStreak=true;
+        setSpan(fontStyle,isSet,StrikethroughSpan.class);
+    }
+    /**
+     * 通用set Span
+     * @param fontStyle
+     * @param isSet
+     * @param tClass
+     * @param <T>
+     */
+    private <T> void setSpan(FontStyle fontStyle,boolean isSet,Class<T> tClass){
         int start = getSelectionStart();
         int end = getSelectionEnd();
         int mode = EXCLUD_INCLUD_MODE;
-        UnderlineSpan[] spans = getEditableText().getSpans(start,end,UnderlineSpan.class);
         List<Part> parts = new ArrayList<>();
-        for(UnderlineSpan span:spans){
-            parts.add(new Part(getEditableText().getSpanStart(span),getEditableText().getSpanEnd(span)));
-            getEditableText().removeSpan(span);
+        T[] spans = getEditableText().getSpans(start,end,tClass);
+        for(T span:spans){
+            boolean isRemove=false;
+            if(span instanceof StyleSpan){//特殊处理 styleSpan
+                int style_type = ((StyleSpan) span).getStyle();
+                if((fontStyle.isBold&& style_type==Typeface.BOLD)
+                        || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
+                    isRemove=true;
+                }
+            }else{
+               isRemove=true;
+            }
+            if(isRemove) {
+                parts.add(new Part(getEditableText().getSpanStart(span), getEditableText().getSpanEnd(span)));
+                getEditableText().removeSpan(span);
+            }
         }
         for(Part part : parts){
             if(part.start<start){
                 if(start==end){mode=EXCLUD_MODE;}
-                getEditableText().setSpan(new UnderlineSpan(),part.start,start,mode);
+                getEditableText().setSpan(getInitSpan(fontStyle),part.start,start,mode);
             }
             if(part.end>end){
-                getEditableText().setSpan(new UnderlineSpan(),end,part.end,mode);
+                getEditableText().setSpan(getInitSpan(fontStyle),end,part.end,mode);
             }
         }
         if(isSet){
             if(start==end){
                 mode=INCLUD_INCLUD_MODE;
             }
-            getEditableText().setSpan(new UnderlineSpan(),start,end,mode);
+            getEditableText().setSpan(getInitSpan(fontStyle),start,end,mode);
         }
     }
+
+    /**
+     * 返回 初始化 span
+     * @param fontStyle
+     * @return
+     */
+    private CharacterStyle getInitSpan(FontStyle fontStyle){
+        if(fontStyle.isBold){
+            return new StyleSpan(Typeface.BOLD);
+        }else if(fontStyle.isItalic){
+            return new StyleSpan(Typeface.ITALIC);
+        }else if(fontStyle.isUnderline){
+            return new UnderlineSpan();
+        }else if(fontStyle.isStreak){
+            return new StrikethroughSpan();
+        }
+        return  null;
+    }
+
     private FontStyle getFontStyle(int start,int end){
         FontStyle fontStyle = new FontStyle();
         CharacterStyle[] characterStyles = getEditableText().getSpans(start,end,CharacterStyle.class);

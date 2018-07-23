@@ -68,6 +68,9 @@ public class FontSytlePanel extends LinearLayout {
     protected void btn_streak_click(View view){
         setFontStyle(view);
     }
+    @OnClick(R.id.btn_img)
+    protected void btn_img(View view){ onFontSelectListener.insertImg(); }
+
     private void setFontStyle(View view){
         Button button = (Button) view;
         button.setTextColor(Color.BLACK);
@@ -132,5 +135,6 @@ public class FontSytlePanel extends LinearLayout {
         void setItalic(boolean isItalic);
         void setUnderline(boolean isUnderline);
         void setStreak(boolean isStreak);
+        void insertImg();
     }
 }
