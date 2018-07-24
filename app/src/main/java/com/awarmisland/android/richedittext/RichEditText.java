@@ -7,11 +7,13 @@ import android.net.Uri;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.View;
 
 import com.bumptech.glide.request.RequestOptions;
@@ -72,6 +74,9 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         if(fontStyle.isStreak){
             getEditableText().setSpan(new StrikethroughSpan(),style_start,style_start,INCLUD_INCLUD_MODE);
         }
+        if(fontStyle.fontSize>0){
+            getEditableText().setSpan(new AbsoluteSizeSpan(fontStyle.fontSize,true),style_start,style_start,INCLUD_INCLUD_MODE);
+        }
         if(onSelectChangeListener!=null){
             onSelectChangeListener.onSelect(start,start);
             onSelectChangeListener.onFontStyleChang(fontStyle);
@@ -86,6 +91,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         setUnderlineSpan(isUnderline);
     }
     public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
+    public void setFontSize(int size){ setFontSizeSpan(size); }
     public void setImg(String path){
         if(!TextUtils.isEmpty(path)) {
             ImagePlate plate = new ImagePlate(this, mContext);
@@ -125,6 +131,18 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         FontStyle fontStyle = new FontStyle();
         fontStyle.isStreak=true;
         setSpan(fontStyle,isSet,StrikethroughSpan.class);
+    }
+
+    /**
+     * 设置 字体大小
+     * @param size
+     */
+    private void setFontSizeSpan(int size){
+        if(size>0){
+            FontStyle fontStyle = new FontStyle();
+            fontStyle.fontSize =size;
+            setSpan(fontStyle,true, AbsoluteSizeSpan.class);
+        }
     }
     /**
      * 通用set Span
@@ -186,6 +204,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
             return new UnderlineSpan();
         }else if(fontStyle.isStreak){
             return new StrikethroughSpan();
+        }else if(fontStyle.fontSize>0){
+            return new AbsoluteSizeSpan(fontStyle.fontSize,true);
         }
         return  null;
     }
@@ -205,6 +225,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
                 fontStyle.isUnderline=true;
             }else if(style instanceof StrikethroughSpan){
                 fontStyle.isStreak=true;
+            }else if(style instanceof AbsoluteSizeSpan){
+                fontStyle.fontSize = ((AbsoluteSizeSpan) style).getSize();
             }
         }
         return fontStyle;

@@ -5,4 +5,5 @@ public class FontStyle {
     boolean isItalic;
     boolean isUnderline;
     boolean isStreak;
+    int fontSize;
 }

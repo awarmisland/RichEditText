@@ -50,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
         getAlbum.setType("image/*");
         startActivityForResult(getAlbum, 0);
     }
+    //字体大小
+    @Override
+    public void setFontSize(int size) {
+        richEditText.setFontSize(size);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

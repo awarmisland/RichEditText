@@ -17,7 +17,8 @@ import butterknife.OnClick;
 /**
  * 样式设置模板
  */
-public class FontSytlePanel extends LinearLayout {
+public class FontSytlePanel extends LinearLayout
+implements FontSizeSelectView.OnSizeSelectListener{
     @BindView(R.id.btn_bold)
     Button btn_bold;
     @BindView(R.id.btn_italic)
@@ -26,6 +27,8 @@ public class FontSytlePanel extends LinearLayout {
     Button btn_underline;
     @BindView(R.id.btn_streak)
     Button btn_streak;
+    @BindView(R.id.fontSizeSelectView)
+    FontSizeSelectView fontSizeSelectView;
 
     private Context mContext;
     private FontStyle fontStyle;
@@ -49,6 +52,7 @@ public class FontSytlePanel extends LinearLayout {
         this.mContext=mContext;
         LayoutInflater.from(mContext).inflate(R.layout.view_font_style_panel,this);
         ButterKnife.bind(this);
+        fontSizeSelectView.setOnSizeSelectListener(this);
         initFontStyle(new FontStyle());
     }
 
@@ -70,13 +74,12 @@ public class FontSytlePanel extends LinearLayout {
     }
     @OnClick(R.id.btn_img)
     protected void btn_img(View view){ onFontSelectListener.insertImg(); }
-    @OnClick(R.id.btn_font_size_small)
-    protected void btn_font_size_small(View view){
 
+    //字体大小选择
+    @Override
+    public void onSizeSelect(int size) {
+        onFontSelectListener.setFontSize(size);
     }
-
-
-
 
 
     private void setFontStyle(View view){
@@ -111,6 +114,7 @@ public class FontSytlePanel extends LinearLayout {
             }
         }
     }
+
     public void initFontStyle(FontStyle fontStyle){
         this.fontStyle = fontStyle;
         initDefaultStyle();
@@ -126,6 +130,8 @@ public class FontSytlePanel extends LinearLayout {
         if(fontStyle.isStreak){
             btn_streak.setTextColor(Color.RED);
         }
+        fontSizeSelectView.setFontSizeStatus(fontStyle.fontSize);
+
     }
     private void initDefaultStyle(){
         btn_bold.setTextColor(Color.BLACK);
@@ -138,11 +144,14 @@ public class FontSytlePanel extends LinearLayout {
         this.onFontSelectListener = onFontSelectListener;
     }
 
+
+
     public interface OnFontSelectListener{
         void setBold(boolean isBold);
         void setItalic(boolean isItalic);
         void setUnderline(boolean isUnderline);
         void setStreak(boolean isStreak);
         void insertImg();
+        void setFontSize(int size);
     }
 }
