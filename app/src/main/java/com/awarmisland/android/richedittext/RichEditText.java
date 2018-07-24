@@ -13,6 +13,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 
@@ -152,6 +153,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
      * @param <T>
      */
     private <T> void setSpan(FontStyle fontStyle,boolean isSet,Class<T> tClass){
+        Log.d("setSpan","");
         int start = getSelectionStart();
         int end = getSelectionEnd();
         int mode = EXCLUD_INCLUD_MODE;
@@ -163,6 +165,11 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
                 int style_type = ((StyleSpan) span).getStyle();
                 if((fontStyle.isBold&& style_type==Typeface.BOLD)
                         || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
+                    isRemove=true;
+                }
+            }else if (span instanceof AbsoluteSizeSpan){
+                int size = ((AbsoluteSizeSpan) span).getSize();
+                if(fontStyle.fontSize== size){
                     isRemove=true;
                 }
             }else{
