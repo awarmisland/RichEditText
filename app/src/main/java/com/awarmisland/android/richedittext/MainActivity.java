@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
             Uri originalUri = data.getData(); // 获得图片的uri
-            String path = originalUri.getPath();
+            String path =Utils.getRealPathFromUri(this,originalUri);
             richEditText.setImg(path);
         }
     }

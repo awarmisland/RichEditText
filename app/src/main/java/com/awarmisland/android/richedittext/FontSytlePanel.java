@@ -70,6 +70,14 @@ public class FontSytlePanel extends LinearLayout {
     }
     @OnClick(R.id.btn_img)
     protected void btn_img(View view){ onFontSelectListener.insertImg(); }
+    @OnClick(R.id.btn_font_size_small)
+    protected void btn_font_size_small(View view){
+
+    }
+
+
+
+
 
     private void setFontStyle(View view){
         Button button = (Button) view;

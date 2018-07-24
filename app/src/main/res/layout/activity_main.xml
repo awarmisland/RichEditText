@@ -9,9 +9,10 @@
     <com.awarmisland.android.richedittext.RichEditText
         android:id="@+id/richEditText"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
         android:gravity="top|left"
         android:hint="编辑内容"
+        app:layout_constraintBottom_toTopOf="@+id/fontStylePanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -86,22 +87,10 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
     }
     public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
     public void setImg(String path){
-        final Uri uri = Uri.parse(path);
-        final int maxWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher);
-        glideRequests.asBitmap()
-                .load(new File(path))
-                .apply(options)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        Bitmap bitmap = zoomBitmapToFixWidth(resource, maxWidth);
-                        image(uri, bitmap);
-                    }
-                });
+        if(!TextUtils.isEmpty(path)) {
+            ImagePlate plate = new ImagePlate(this, mContext);
+            plate.image(path);
+        }
     }
     /**
      * bold italic
