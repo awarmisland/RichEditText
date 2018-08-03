@@ -48,7 +48,6 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        int style_start =getSelectionStart();
         int start = getSelectionStart()-1;
         if(start<0){
             start=0;
