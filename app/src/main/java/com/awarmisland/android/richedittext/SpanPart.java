@@ -1,15 +1,18 @@
 package com.awarmisland.android.richedittext;
 
-public class Part extends FontStyle {
+/**
+ * span 样式记录
+ */
+public class SpanPart extends FontStyle {
     public int start;
     public int end;
 
-    public Part(int start, int end) {
+    public SpanPart(int start, int end) {
         this.start = start;
         this.end = end;
     }
 
-    public Part(FontStyle fontStyle) {
+    public SpanPart(FontStyle fontStyle) {
         this.isBold = fontStyle.isBold;
         this.isItalic = fontStyle.isItalic;
         this.isStreak = fontStyle.isStreak;

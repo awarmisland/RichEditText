@@ -1,9 +1,7 @@
 package com.awarmisland.android.richedittext;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -14,14 +12,8 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,35 +54,23 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
             start=0;
         }
         FontStyle fontStyle = getFontStyle(start,start);
-
-        if(fontStyle.isBold){
-            getEditableText().setSpan(new StyleSpan(Typeface.BOLD),style_start,style_start,INCLUD_INCLUD_MODE);
-        }
-        if(fontStyle.isItalic){
-            getEditableText().setSpan(new StyleSpan(Typeface.ITALIC),style_start,style_start,INCLUD_INCLUD_MODE);
-        }
-        if(fontStyle.isUnderline){
-            getEditableText().setSpan(new UnderlineSpan(),style_start,style_start,INCLUD_INCLUD_MODE);
-        }
-        if(fontStyle.isStreak){
-            getEditableText().setSpan(new StrikethroughSpan(),style_start,style_start,INCLUD_INCLUD_MODE);
-        }
-        if(fontStyle.fontSize>0){
-            getEditableText().setSpan(new AbsoluteSizeSpan(fontStyle.fontSize,true),style_start,style_start,INCLUD_INCLUD_MODE);
-        }
+        setBold(fontStyle.isBold);
+        setItalic(fontStyle.isItalic);
+        setUnderline(fontStyle.isUnderline);
+        setStreak(fontStyle.isStreak);
+        setFontSize(fontStyle.fontSize);
         if(onSelectChangeListener!=null){
             onSelectChangeListener.onSelect(start,start);
             onSelectChangeListener.onFontStyleChang(fontStyle);
         }
     }
 
-    public void setBold(boolean isBold){
-        setStyleSpan(isBold,Typeface.BOLD);
-    }
+    /**
+     * public setting
+     */
+    public void setBold(boolean isBold){ setStyleSpan(isBold,Typeface.BOLD); }
     public void setItalic(boolean isItalic){ setStyleSpan(isItalic,Typeface.ITALIC); }
-    public void setUnderline(boolean isUnderline){
-        setUnderlineSpan(isUnderline);
-    }
+    public void setUnderline(boolean isUnderline){ setUnderlineSpan(isUnderline); }
     public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
     public void setFontSize(int size){ setFontSizeSpan(size); }
     public void setImg(String path){
@@ -139,11 +119,12 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
      * @param size
      */
     private void setFontSizeSpan(int size){
-        if(size>0){
-            FontStyle fontStyle = new FontStyle();
-            fontStyle.fontSize =size;
-            setSpan(fontStyle,true, AbsoluteSizeSpan.class);
+        if(size==0){
+            size = FontSizeSelectView.NORMAL;
         }
+        FontStyle fontStyle = new FontStyle();
+        fontStyle.fontSize =size;
+        setSpan(fontStyle,true, AbsoluteSizeSpan.class);
     }
     /**
      * 通用set Span
@@ -157,37 +138,16 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         int start = getSelectionStart();
         int end = getSelectionEnd();
         int mode = EXCLUD_INCLUD_MODE;
-        List<Part> parts = new ArrayList<>();
         T[] spans = getEditableText().getSpans(start,end,tClass);
-        for(T span:spans){
-            boolean isRemove=false;
-            if(span instanceof StyleSpan){//特殊处理 styleSpan
-                int style_type = ((StyleSpan) span).getStyle();
-                if((fontStyle.isBold&& style_type==Typeface.BOLD)
-                        || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
-                    isRemove=true;
-                }
-            }else{
-               isRemove=true;
-            }
-            if(isRemove) {
-                Part part = new Part(fontStyle);
-                part.start = getEditableText().getSpanStart(span);
-                part.end = getEditableText().getSpanEnd(span);
-                if(span instanceof AbsoluteSizeSpan){
-                    part.fontSize = ((AbsoluteSizeSpan) span).getSize();
-                }
-                parts.add(part);
-                getEditableText().removeSpan(span);
-            }
-        }
-        for(Part part : parts){
-            if(part.start<start){
+        //获取
+        List<SpanPart> spanStyles = getOldFontSytles(spans,fontStyle);
+        for(SpanPart spanStyle : spanStyles){
+            if(spanStyle.start<start){
                 if(start==end){mode=EXCLUD_MODE;}
-                getEditableText().setSpan(getInitSpan(part),part.start,start,mode);
+                getEditableText().setSpan(getInitSpan(spanStyle), spanStyle.start,start,mode);
             }
-            if(part.end>end){
-                getEditableText().setSpan(getInitSpan(part),end,part.end,mode);
+            if(spanStyle.end>end){
+                getEditableText().setSpan(getInitSpan(spanStyle),end, spanStyle.end,mode);
             }
         }
         if(isSet){
@@ -198,6 +158,39 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         }
     }
 
+    /**
+     *  获取当前 选中 spans
+     * @param spans
+     * @param fontStyle
+     * @param <T>
+     * @return
+     */
+    private <T> List<SpanPart> getOldFontSytles(T[] spans, FontStyle fontStyle){
+        List<SpanPart> spanStyles = new ArrayList<>();
+        for(T span:spans){
+            boolean isRemove=false;
+            if(span instanceof StyleSpan){//特殊处理 styleSpan
+                int style_type = ((StyleSpan) span).getStyle();
+                if((fontStyle.isBold&& style_type==Typeface.BOLD)
+                        || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
+                    isRemove=true;
+                }
+            }else{
+                isRemove=true;
+            }
+            if(isRemove) {
+                SpanPart spanStyle = new SpanPart(fontStyle);
+                spanStyle.start = getEditableText().getSpanStart(span);
+                spanStyle.end = getEditableText().getSpanEnd(span);
+                if(span instanceof AbsoluteSizeSpan){
+                    spanStyle.fontSize = ((AbsoluteSizeSpan) span).getSize();
+                }
+                spanStyles.add(spanStyle);
+                getEditableText().removeSpan(span);
+            }
+        }
+        return spanStyles;
+    }
     /**
      * 返回 初始化 span
      * @param fontStyle
@@ -218,6 +211,12 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         return  null;
     }
 
+    /**
+     * 获取某位置的  样式
+     * @param start
+     * @param end
+     * @return
+     */
     private FontStyle getFontStyle(int start,int end){
         FontStyle fontStyle = new FontStyle();
         CharacterStyle[] characterStyles = getEditableText().getSpans(start,end,CharacterStyle.class);
