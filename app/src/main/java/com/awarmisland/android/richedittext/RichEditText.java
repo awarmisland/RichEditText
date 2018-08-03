@@ -167,26 +167,27 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
                         || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
                     isRemove=true;
                 }
-            }else if (span instanceof AbsoluteSizeSpan){
-                int size = ((AbsoluteSizeSpan) span).getSize();
-                if(fontStyle.fontSize== size){
-                    isRemove=true;
-                }
             }else{
                isRemove=true;
             }
             if(isRemove) {
-                parts.add(new Part(getEditableText().getSpanStart(span), getEditableText().getSpanEnd(span)));
+                Part part = new Part(fontStyle);
+                part.start = getEditableText().getSpanStart(span);
+                part.end = getEditableText().getSpanEnd(span);
+                if(span instanceof AbsoluteSizeSpan){
+                    part.fontSize = ((AbsoluteSizeSpan) span).getSize();
+                }
+                parts.add(part);
                 getEditableText().removeSpan(span);
             }
         }
         for(Part part : parts){
             if(part.start<start){
                 if(start==end){mode=EXCLUD_MODE;}
-                getEditableText().setSpan(getInitSpan(fontStyle),part.start,start,mode);
+                getEditableText().setSpan(getInitSpan(part),part.start,start,mode);
             }
             if(part.end>end){
-                getEditableText().setSpan(getInitSpan(fontStyle),end,part.end,mode);
+                getEditableText().setSpan(getInitSpan(part),end,part.end,mode);
             }
         }
         if(isSet){

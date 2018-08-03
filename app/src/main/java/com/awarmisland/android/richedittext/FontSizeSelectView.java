@@ -25,9 +25,9 @@ public class FontSizeSelectView extends LinearLayout{
     @BindView(R.id.btn_font_size_big)
     Button btn_font_size_big;
     private OnSizeSelectListener onSizeSelectListener;
-    public final static int NORMAL = 14;
-    public final static int SMALL = 12;
-    public final static int BIG = 16;
+    public final static int NORMAL = 16;
+    public final static int SMALL = 14;
+    public final static int BIG = 18;
     public FontSizeSelectView(Context context) {
         super(context);
         initView(context);
