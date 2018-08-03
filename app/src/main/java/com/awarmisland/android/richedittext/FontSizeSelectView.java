@@ -25,9 +25,7 @@ public class FontSizeSelectView extends LinearLayout{
     @BindView(R.id.btn_font_size_big)
     Button btn_font_size_big;
     private OnSizeSelectListener onSizeSelectListener;
-    public final static int NORMAL = 16;
-    public final static int SMALL = 14;
-    public final static int BIG = 18;
+
     public FontSizeSelectView(Context context) {
         super(context);
         initView(context);
@@ -57,19 +55,19 @@ public class FontSizeSelectView extends LinearLayout{
         btn_font_size_small.setTextColor(Color.BLACK);
         btn_font_size_normal.setTextColor(Color.BLACK);
         btn_font_size_big.setTextColor(Color.BLACK);
-        int size=NORMAL;
+        int size=FontStyle.NORMAL;
         switch (id){
             case R.id.btn_font_size_small:
                 btn_font_size_small.setTextColor(Color.RED);
-                size=SMALL;
+                size=FontStyle.SMALL;
                 break;
             case R.id.btn_font_size_normal:
                 btn_font_size_normal.setTextColor(Color.RED);
-                size=NORMAL;
+                size=FontStyle.NORMAL;
                 break;
             case R.id.btn_font_size_big:
                 btn_font_size_big.setTextColor(Color.RED);
-                size=BIG;
+                size=FontStyle.BIG;
                 break;
         }
         if(onSizeSelectListener!=null){
@@ -82,18 +80,18 @@ public class FontSizeSelectView extends LinearLayout{
      * @param size
      */
     public void setFontSizeStatus(int size){
-        if(size==0){size=NORMAL;}
+        if(size==0){size=FontStyle.NORMAL;}
         btn_font_size_small.setTextColor(Color.BLACK);
         btn_font_size_normal.setTextColor(Color.BLACK);
         btn_font_size_big.setTextColor(Color.BLACK);
         switch (size){
-            case SMALL:
+            case FontStyle.SMALL:
                 btn_font_size_small.setTextColor(Color.RED);
                 break;
-            case NORMAL:
+            case FontStyle.NORMAL:
                 btn_font_size_normal.setTextColor(Color.RED);
                 break;
-            case BIG:
+            case FontStyle.BIG:
                 btn_font_size_big.setTextColor(Color.RED);
                 break;
         }

@@ -119,7 +119,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
      */
     private void setFontSizeSpan(int size){
         if(size==0){
-            size = FontSizeSelectView.NORMAL;
+            size = FontStyle.NORMAL;
         }
         FontStyle fontStyle = new FontStyle();
         fontStyle.fontSize =size;
