@@ -111,5 +111,16 @@ public class Utils {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     *
+     * @param context 上下文
+     * @param dpValue 尺寸dip
+     * @return 像素值
+     */
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 
 }

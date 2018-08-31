@@ -1,12 +1,10 @@
 package com.awarmisland.android.richedittext;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import butterknife.BindView;
@@ -17,17 +15,16 @@ import butterknife.OnClick;
  * 样式设置模板
  */
 public class FontSytlePanel extends LinearLayout
-implements FontSizeSelectView.OnSizeSelectListener{
-    @BindView(R.id.btn_bold)
-    Button btn_bold;
-    @BindView(R.id.btn_italic)
-    Button btn_italic;
-    @BindView(R.id.btn_underline)
-    Button btn_underline;
-    @BindView(R.id.btn_streak)
-    Button btn_streak;
+implements FontStyleSelectView.OnFontStyleSelectListener,FontSizeSelectView.OnSizeSelectListener
+,FontsColorSelectView.OnColorSelectListener{
+    @BindView(R.id.fontStyleSelectView)
+    FontStyleSelectView fontStyleSelectView;
+    //字体大小
     @BindView(R.id.fontSizeSelectView)
     FontSizeSelectView fontSizeSelectView;
+    //字体颜色
+    @BindView(R.id.fontColorSelectView)
+    FontsColorSelectView fontColorSelectView;
 
     private Context mContext;
     private FontStyle fontStyle;
@@ -51,99 +48,55 @@ implements FontSizeSelectView.OnSizeSelectListener{
         this.mContext=mContext;
         LayoutInflater.from(mContext).inflate(R.layout.view_font_style_panel,this);
         ButterKnife.bind(this);
+        fontStyleSelectView.setFontStyle(fontStyle);
+        fontStyleSelectView.setOnFontStyleSelectListener(this);
         fontSizeSelectView.setOnSizeSelectListener(this);
+        fontColorSelectView.setFontStyle(fontStyle);
+        fontColorSelectView.setOnColorSelectListener(this);
         initFontStyle(new FontStyle());
     }
-
-    @OnClick(R.id.btn_bold)
-    protected void btn_bold_click(View view){
-        setFontStyle(view);
-    }
-    @OnClick(R.id.btn_italic)
-    protected void btn_italic_click(View view){
-        setFontStyle(view);
-    }
-    @OnClick(R.id.btn_underline)
-    protected void btn_underline_click(View view){
-        setFontStyle(view);
-    }
-    @OnClick(R.id.btn_streak)
-    protected void btn_streak_click(View view){
-        setFontStyle(view);
-    }
+    //图片选择
     @OnClick(R.id.btn_img)
     protected void btn_img(View view){ onFontSelectListener.insertImg(); }
 
+    @Override
+    public void setBold(boolean isBold) {
+        onFontSelectListener.setBold(isBold);
+    }
+    @Override
+    public void setItalic(boolean isItalic) {
+        onFontSelectListener.setItalic(isItalic);
+    }
+    @Override
+    public void setUnderline(boolean isUnderline) {
+        onFontSelectListener.setUnderline(isUnderline);
+    }
+    @Override
+    public void setStreak(boolean isStreak) {
+        onFontSelectListener.setStreak(isStreak);
+    }
     //字体大小选择
     @Override
     public void onSizeSelect(int size) {
         onFontSelectListener.setFontSize(size);
     }
-
-
-    private void setFontStyle(View view){
-        Button button = (Button) view;
-        button.setTextColor(Color.BLACK);
-        boolean flag= false;
-        if(onFontSelectListener!=null){
-            switch (view.getId()){
-                case R.id.btn_bold:
-                    fontStyle.isBold=!fontStyle.isBold;
-                    flag=fontStyle.isBold;
-                    onFontSelectListener.setBold(fontStyle.isBold);
-                    break;
-                case R.id.btn_italic:
-                    fontStyle.isItalic=!fontStyle.isItalic;
-                    flag=fontStyle.isItalic;
-                    onFontSelectListener.setItalic(fontStyle.isItalic);
-                    break;
-                case R.id.btn_underline:
-                    fontStyle.isUnderline=!fontStyle.isUnderline;
-                    flag=fontStyle.isUnderline;
-                    onFontSelectListener.setUnderline(fontStyle.isUnderline);
-                    break;
-                case R.id.btn_streak:
-                    fontStyle.isStreak=!fontStyle.isStreak;
-                    flag=fontStyle.isStreak;
-                    onFontSelectListener.setStreak(fontStyle.isStreak);
-                    break;
-            }
-            if(flag){
-                button.setTextColor(Color.RED);
-            }
-        }
+    //颜色选择
+    @Override
+    public void onColorSelect(int color) {
+        onFontSelectListener.setFontColor(color);
     }
 
     public void initFontStyle(FontStyle fontStyle){
         this.fontStyle = fontStyle;
-        initDefaultStyle();
-        if(fontStyle.isBold){
-            btn_bold.setTextColor(Color.RED);
-        }
-        if(fontStyle.isItalic){
-            btn_italic.setTextColor(Color.RED);
-        }
-        if(fontStyle.isUnderline){
-            btn_underline.setTextColor(Color.RED);
-        }
-        if(fontStyle.isStreak){
-            btn_streak.setTextColor(Color.RED);
-        }
+        fontStyleSelectView.initFontStyle(fontStyle);
         fontSizeSelectView.setFontSizeStatus(fontStyle.fontSize);
+        fontColorSelectView.initFontStyle(fontStyle);
+    }
 
-    }
-    private void initDefaultStyle(){
-        btn_bold.setTextColor(Color.BLACK);
-        btn_italic.setTextColor(Color.BLACK);
-        btn_underline.setTextColor(Color.BLACK);
-        btn_streak.setTextColor(Color.BLACK);
-    }
 
     public void setOnFontSelectListener(OnFontSelectListener onFontSelectListener) {
         this.onFontSelectListener = onFontSelectListener;
     }
-
-
 
     public interface OnFontSelectListener{
         void setBold(boolean isBold);
@@ -152,5 +105,6 @@ implements FontSizeSelectView.OnSizeSelectListener{
         void setStreak(boolean isStreak);
         void insertImg();
         void setFontSize(int size);
+        void setFontColor(int color);
     }
 }

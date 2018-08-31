@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
     public void setFontSize(int size) {
         richEditText.setFontSize(size);
     }
+    //颜色设置
+    @Override
+    public void setFontColor(int color) {
+        richEditText.setFontColor(color);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,12 +1,14 @@
 package com.awarmisland.android.richedittext;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -58,6 +60,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         setUnderline(fontStyle.isUnderline);
         setStreak(fontStyle.isStreak);
         setFontSize(fontStyle.fontSize);
+        setFontColor(fontStyle.color);
         if(onSelectChangeListener!=null){
             onSelectChangeListener.onSelect(start,start);
             onSelectChangeListener.onFontStyleChang(fontStyle);
@@ -72,6 +75,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
     public void setUnderline(boolean isUnderline){ setUnderlineSpan(isUnderline); }
     public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
     public void setFontSize(int size){ setFontSizeSpan(size); }
+    public void setFontColor(int color){setForcegroundColor(color);};
     public void setImg(String path){
         if(!TextUtils.isEmpty(path)) {
             ImagePlate plate = new ImagePlate(this, mContext);
@@ -124,6 +128,18 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         FontStyle fontStyle = new FontStyle();
         fontStyle.fontSize =size;
         setSpan(fontStyle,true, AbsoluteSizeSpan.class);
+    }
+    /**
+     * 设置字体颜色
+     * @param color
+     */
+    private void setForcegroundColor(int color){
+        if(color==0){
+            color= Color.parseColor(FontStyle.BLACK);
+        }
+        FontStyle  fontStyle = new FontStyle();
+        fontStyle.color = color;
+        setSpan(fontStyle,true, ForegroundColorSpan.class);
     }
     /**
      * 通用set Span
@@ -183,6 +199,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
                 spanStyle.end = getEditableText().getSpanEnd(span);
                 if(span instanceof AbsoluteSizeSpan){
                     spanStyle.fontSize = ((AbsoluteSizeSpan) span).getSize();
+                }else if(span instanceof ForegroundColorSpan){
+                    spanStyle.color = ((ForegroundColorSpan) span).getForegroundColor();
                 }
                 spanStyles.add(spanStyle);
                 getEditableText().removeSpan(span);
@@ -206,6 +224,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
             return new StrikethroughSpan();
         }else if(fontStyle.fontSize>0){
             return new AbsoluteSizeSpan(fontStyle.fontSize,true);
+        }else if(fontStyle.color!=0){
+            return new ForegroundColorSpan(fontStyle.color);
         }
         return  null;
     }
@@ -233,6 +253,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
                 fontStyle.isStreak=true;
             }else if(style instanceof AbsoluteSizeSpan){
                 fontStyle.fontSize = ((AbsoluteSizeSpan) style).getSize();
+            }else if(style instanceof ForegroundColorSpan){
+                fontStyle.color = ((ForegroundColorSpan) style).getForegroundColor();
             }
         }
         return fontStyle;
