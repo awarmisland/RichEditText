@@ -24,8 +24,8 @@ public class FontSizeSelectView extends LinearLayout{
     Button btn_font_size_normal;
     @BindView(R.id.btn_font_size_big)
     Button btn_font_size_big;
-    private OnSizeSelectListener onSizeSelectListener;
-
+    private OnFontSizeChangeListener onFontSizeChangeListener;
+    private FontStyle fontStyle;
     public FontSizeSelectView(Context context) {
         super(context);
         initView(context);
@@ -44,63 +44,70 @@ public class FontSizeSelectView extends LinearLayout{
     private void initView(Context context){
         LayoutInflater.from(context).inflate(R.layout.view_font_size_select,this);
         ButterKnife.bind(this);
-        btn_font_size_small.setTextColor(Color.BLACK);
-        btn_font_size_normal.setTextColor(Color.RED);
-        btn_font_size_big.setTextColor(Color.BLACK);
     }
 
-    @OnClick({R.id.btn_font_size_small,R.id.btn_font_size_normal,R.id.btn_font_size_big})
-    protected void btn_on_click(View view){
-        int id = view.getId();
-        btn_font_size_small.setTextColor(Color.BLACK);
-        btn_font_size_normal.setTextColor(Color.BLACK);
-        btn_font_size_big.setTextColor(Color.BLACK);
-        int size=FontStyle.NORMAL;
-        switch (id){
-            case R.id.btn_font_size_small:
-                btn_font_size_small.setTextColor(Color.RED);
-                size=FontStyle.SMALL;
-                break;
-            case R.id.btn_font_size_normal:
-                btn_font_size_normal.setTextColor(Color.RED);
-                size=FontStyle.NORMAL;
-                break;
-            case R.id.btn_font_size_big:
-                btn_font_size_big.setTextColor(Color.RED);
-                size=FontStyle.BIG;
-                break;
+    @OnClick(R.id.btn_font_size_small)
+    protected void btn_font_size_small_onClick(){
+        if(onFontSizeChangeListener!=null){
+            fontStyle.fontSize=FontStyle.SMALL;
+            onFontSizeChangeListener.onFontSizeSelect(FontStyle.SMALL);
+            initDefaultView(R.id.btn_font_size_small);
         }
-        if(onSizeSelectListener!=null){
-            onSizeSelectListener.onSizeSelect(size);
+    }
+    @OnClick(R.id.btn_font_size_normal)
+    protected void btn_font_size_normal_onClick(){
+        if(onFontSizeChangeListener!=null){
+            fontStyle.fontSize=FontStyle.NORMAL;
+            onFontSizeChangeListener.onFontSizeSelect(FontStyle.NORMAL);
+            initDefaultView(R.id.btn_font_size_normal);
+        }
+    }
+    @OnClick(R.id.btn_font_size_big)
+    protected void btn_font_size_big_onClick(){
+        if(onFontSizeChangeListener!=null){
+            fontStyle.fontSize=FontStyle.BIG;
+            onFontSizeChangeListener.onFontSizeSelect(FontStyle.BIG);
+            initDefaultView(R.id.btn_font_size_big);
         }
     }
 
     /**
      * 初始化view
-     * @param size
+     * @param fontStyle
      */
-    public void setFontSizeStatus(int size){
-        if(size==0){size=FontStyle.NORMAL;}
+    public void initFontStyle(FontStyle fontStyle){
+        this.fontStyle = fontStyle;
+        int size = fontStyle.fontSize;
+        long id=R.id.btn_font_size_normal;
+        if(size==FontStyle.SMALL){
+            id=R.id.btn_font_size_small;
+        }else if(size==FontStyle.BIG){
+            id=R.id.btn_font_size_big;
+        }
+        initDefaultView(id);
+    }
+    private void initDefaultView(long id){
         btn_font_size_small.setTextColor(Color.BLACK);
         btn_font_size_normal.setTextColor(Color.BLACK);
         btn_font_size_big.setTextColor(Color.BLACK);
-        switch (size){
-            case FontStyle.SMALL:
-                btn_font_size_small.setTextColor(Color.RED);
-                break;
-            case FontStyle.NORMAL:
-                btn_font_size_normal.setTextColor(Color.RED);
-                break;
-            case FontStyle.BIG:
-                btn_font_size_big.setTextColor(Color.RED);
-                break;
+        if(R.id.btn_font_size_small==id){
+            btn_font_size_small.setTextColor(Color.RED);
+        }else if(R.id.btn_font_size_normal==id){
+            btn_font_size_normal.setTextColor(Color.RED);
+        }else if(R.id.btn_font_size_big==id){
+            btn_font_size_big.setTextColor(Color.RED);
         }
     }
-    public void setOnSizeSelectListener(OnSizeSelectListener onSizeSelectListener) {
-        this.onSizeSelectListener = onSizeSelectListener;
+
+    public void setOnFontSizeChangeListener(OnFontSizeChangeListener onFontSizeChangeListener) {
+        this.onFontSizeChangeListener = onFontSizeChangeListener;
     }
 
-    public interface OnSizeSelectListener{
-        void onSizeSelect(int size);
+    public void setFontStyle(FontStyle fontStyle) {
+        this.fontStyle = fontStyle;
+    }
+
+    public interface OnFontSizeChangeListener{
+        void onFontSizeSelect(int size);
     }
 }

@@ -8,18 +8,18 @@ import android.os.Bundle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements FontSytlePanel.OnFontSelectListener
+public class MainActivity extends AppCompatActivity implements FontStylePanel.OnFontPanelListener
 ,RichEditText.OnSelectChangeListener{
     @BindView(R.id.richEditText)
     RichEditText richEditText;
     @BindView(R.id.fontStylePanel)
-    FontSytlePanel fontSytlePanel;
+    FontStylePanel fontStylePanel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        fontSytlePanel.setOnFontSelectListener(this);
+        fontStylePanel.setOnFontPanelListener(this);
         richEditText.setOnSelectChangeListener(this);
     }
 
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
 
     @Override
     public void setStreak(boolean isStreak) { richEditText.setStreak(isStreak); }
-
 
     @Override
     public void insertImg() {
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements FontSytlePanel.On
      */
     @Override
     public void onFontStyleChang(FontStyle fontStyle) {
-        fontSytlePanel.initFontStyle(fontStyle);
+        fontStylePanel.initFontStyle(fontStyle);
     }
 
     /**

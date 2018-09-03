@@ -15,12 +15,12 @@ import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
+ * ljz
  * RichEditText 富文本
  */
 public class RichEditText extends AppCompatEditText implements View.OnClickListener{
@@ -70,12 +70,12 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
     /**
      * public setting
      */
-    public void setBold(boolean isBold){ setStyleSpan(isBold,Typeface.BOLD); }
-    public void setItalic(boolean isItalic){ setStyleSpan(isItalic,Typeface.ITALIC); }
+    public void setBold(boolean isBold){ setStyleSpan(isBold, Typeface.BOLD); }
+    public void setItalic(boolean isItalic){ setStyleSpan(isItalic, Typeface.ITALIC); }
     public void setUnderline(boolean isUnderline){ setUnderlineSpan(isUnderline); }
     public void setStreak(boolean isStreak){ setStreakSpan(isStreak); }
     public void setFontSize(int size){ setFontSizeSpan(size); }
-    public void setFontColor(int color){setForcegroundColor(color);};
+    public void setFontColor(int color){ setForcegroundColor(color); }
     public void setImg(String path){
         if(!TextUtils.isEmpty(path)) {
             ImagePlate plate = new ImagePlate(this, mContext);
@@ -89,9 +89,9 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
      */
     private void setStyleSpan(boolean isSet,int type){
         FontStyle fontStyle = new FontStyle();
-        if(type==Typeface.BOLD){
+        if(type== Typeface.BOLD){
             fontStyle.isBold=true;
-        }else if(type==Typeface.ITALIC){
+        }else if(type== Typeface.ITALIC){
             fontStyle.isItalic=true;
         }
         setSpan(fontStyle,isSet,StyleSpan.class);
@@ -129,6 +129,7 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         fontStyle.fontSize =size;
         setSpan(fontStyle,true, AbsoluteSizeSpan.class);
     }
+
     /**
      * 设置字体颜色
      * @param color
@@ -186,8 +187,8 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
             boolean isRemove=false;
             if(span instanceof StyleSpan){//特殊处理 styleSpan
                 int style_type = ((StyleSpan) span).getStyle();
-                if((fontStyle.isBold&& style_type==Typeface.BOLD)
-                        || (fontStyle.isItalic&&style_type==Typeface.ITALIC)){
+                if((fontStyle.isBold&& style_type== Typeface.BOLD)
+                        || (fontStyle.isItalic&&style_type== Typeface.ITALIC)){
                     isRemove=true;
                 }
             }else{
@@ -242,9 +243,9 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         for(CharacterStyle style : characterStyles){
             if(style instanceof StyleSpan){
                 int type = ((StyleSpan) style).getStyle();
-                if(type==Typeface.BOLD){
+                if(type== Typeface.BOLD){
                     fontStyle.isBold=true;
-                }else if(type==Typeface.ITALIC){
+                }else if(type== Typeface.ITALIC){
                     fontStyle.isItalic=true;
                 }
             }else if(style instanceof UnderlineSpan){
@@ -259,13 +260,15 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
         }
         return fontStyle;
     }
+
+
+
     public void setOnSelectChangeListener(OnSelectChangeListener onSelectChangeListener) {
         this.onSelectChangeListener = onSelectChangeListener;
     }
 
     public interface OnSelectChangeListener{
         void onFontStyleChang(FontStyle fontStyle);
-        void onSelect(int start,int end);
+        void onSelect(int start, int end);
     }
-
 }

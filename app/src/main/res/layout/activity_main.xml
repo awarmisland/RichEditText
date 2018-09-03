@@ -12,13 +12,13 @@
         android:layout_height="0dp"
         android:gravity="top|left"
         android:hint="编辑内容"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/fontStylePanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.awarmisland.android.richedittext.FontSytlePanel
+    <com.awarmisland.android.richedittext.FontStylePanel
         android:id="@+id/fontStylePanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,5 +27,5 @@
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></com.awarmisland.android.richedittext.FontSytlePanel>
+        app:layout_constraintStart_toStartOf="parent"></com.awarmisland.android.richedittext.FontStylePanel>
 </android.support.constraint.ConstraintLayout>
