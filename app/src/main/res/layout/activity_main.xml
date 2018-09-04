@@ -4,7 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/include_head_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.awarmisland.android.richedittext.RichEditText
         android:id="@+id/richEditText"
@@ -16,7 +23,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fontStylePanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <com.awarmisland.android.richedittext.FontStylePanel
         android:id="@+id/fontStylePanel"
