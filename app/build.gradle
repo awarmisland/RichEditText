@@ -5,7 +5,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.awarmisland.android.richedittext"
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -33,4 +33,5 @@ dependencies {
         exclude group: 'com.android.support'
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 }

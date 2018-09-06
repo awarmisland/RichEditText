@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +15,7 @@ import com.awarmisland.android.richedittext.FontStylePanel;
 import com.awarmisland.android.richedittext.R;
 import com.awarmisland.android.richedittext.RichEditText;
 import com.awarmisland.android.richedittext.Utils;
+import com.awarmisland.android.richedittext.handle.CustomHtml;
 import com.awarmisland.android.richedittext.handle.HtmlParser;
 import com.awarmisland.android.richedittext.handle.RichEditImageGetter;
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements FontStylePanel.On
         String html_content = getIntent().getStringExtra("html_content");
         if(!TextUtils.isEmpty(html_content)){
             Log.d("richText","html转span:"+html_content);
-            Spanned spanned = Html.fromHtml(html_content,new RichEditImageGetter(this,richEditText),null);
+            Spanned spanned = CustomHtml.fromHtml(html_content,CustomHtml.FROM_HTML_MODE_LEGACY,new RichEditImageGetter(this,richEditText),null);
             richEditText.setText(spanned);
         }
     }

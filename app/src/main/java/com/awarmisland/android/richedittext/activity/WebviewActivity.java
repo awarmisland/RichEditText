@@ -35,9 +35,11 @@ public class WebviewActivity extends Activity {
         btn_back.setText("返回");
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
+//        settings.setUseWideViewPort(true);
+//        settings.setLoadWithOverviewMode(true);
         settings.setSupportZoom(false);
         html_content = getIntent().getStringExtra("content");
-        webview.loadDataWithBaseURL(null,html_content,"text/html","UTF-8",null);
+        webview.loadDataWithBaseURL("",html_content,"text/html","UTF-8",null);
     }
 
 
