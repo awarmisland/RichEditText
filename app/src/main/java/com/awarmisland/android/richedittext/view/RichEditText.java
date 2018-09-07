@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,6 +15,11 @@ import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.awarmisland.android.richedittext.bean.FontStyle;
+import com.awarmisland.android.richedittext.bean.ImagePlate;
+import com.awarmisland.android.richedittext.bean.SpanPart;
+
 import java.util.ArrayList;
 import java.util.List;
 

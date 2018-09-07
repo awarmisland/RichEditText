@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.bean;
 
 /**
  * span 样式记录

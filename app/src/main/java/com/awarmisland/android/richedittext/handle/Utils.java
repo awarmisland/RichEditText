@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.handle;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;

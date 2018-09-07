@@ -27,7 +27,7 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 
-import com.awarmisland.android.richedittext.FontStyle;
+import com.awarmisland.android.richedittext.bean.FontStyle;
 import com.awarmisland.android.richedittext.R;
 
 import org.ccil.cowan.tagsoup.Parser;

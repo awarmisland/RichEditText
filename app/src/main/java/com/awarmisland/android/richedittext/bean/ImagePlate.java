@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.bean;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,9 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
+
+import com.awarmisland.android.richedittext.R;
+import com.awarmisland.android.richedittext.view.RichEditText;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;

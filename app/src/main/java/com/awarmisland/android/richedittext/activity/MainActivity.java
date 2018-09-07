@@ -14,11 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.awarmisland.android.richedittext.FontStyle;
-import com.awarmisland.android.richedittext.FontStylePanel;
+import com.awarmisland.android.richedittext.bean.FontStyle;
+import com.awarmisland.android.richedittext.view.FontStylePanel;
 import com.awarmisland.android.richedittext.R;
-import com.awarmisland.android.richedittext.RichEditText;
-import com.awarmisland.android.richedittext.Utils;
+import com.awarmisland.android.richedittext.view.RichEditText;
+import com.awarmisland.android.richedittext.handle.Utils;
 import com.awarmisland.android.richedittext.handle.CustomHtml;
 import com.awarmisland.android.richedittext.handle.HtmlParser;
 import com.awarmisland.android.richedittext.handle.RichEditImageGetter;

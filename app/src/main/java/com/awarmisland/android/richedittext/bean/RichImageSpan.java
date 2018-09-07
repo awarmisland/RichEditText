@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.bean;
 
 import android.content.Context;
 import android.graphics.Bitmap;

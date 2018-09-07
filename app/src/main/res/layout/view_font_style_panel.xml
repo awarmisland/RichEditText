@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.awarmisland.android.richedittext.FontStyleSelectView
+    <com.awarmisland.android.richedittext.view.FontStyleSelectView
         android:id="@+id/fontStyleSelectView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></com.awarmisland.android.richedittext.FontStyleSelectView>
+        app:layout_constraintStart_toStartOf="parent"></com.awarmisland.android.richedittext.view.FontStyleSelectView>
 
     <Button
         android:id="@+id/btn_img"
@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fontStyleSelectView" />
 
-    <com.awarmisland.android.richedittext.FontSizeSelectView
+    <com.awarmisland.android.richedittext.view.FontSizeSelectView
         android:id="@+id/fontSizeSelectView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,14 +33,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_img"
-        app:layout_constraintTop_toBottomOf="@+id/fontStyleSelectView"></com.awarmisland.android.richedittext.FontSizeSelectView>
+        app:layout_constraintTop_toBottomOf="@+id/fontStyleSelectView"></com.awarmisland.android.richedittext.view.FontSizeSelectView>
 
-    <com.awarmisland.android.richedittext.FontsColorSelectView
+    <com.awarmisland.android.richedittext.view.FontsColorSelectView
         android:id="@+id/fontColorSelectView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_img"></com.awarmisland.android.richedittext.FontsColorSelectView>
+        app:layout_constraintTop_toBottomOf="@+id/btn_img"></com.awarmisland.android.richedittext.view.FontsColorSelectView>
 </android.support.constraint.ConstraintLayout>

@@ -13,8 +13,7 @@ import android.text.Html;
 import android.view.WindowManager;
 
 import com.awarmisland.android.richedittext.R;
-import com.awarmisland.android.richedittext.RichEditText;
-import com.awarmisland.android.richedittext.Utils;
+import com.awarmisland.android.richedittext.view.RichEditText;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -22,7 +21,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.bumptech.glide.util.Util;
 
 import java.util.HashSet;
 

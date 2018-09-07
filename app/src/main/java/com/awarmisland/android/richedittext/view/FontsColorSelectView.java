@@ -1,4 +1,4 @@
-package com.awarmisland.android.richedittext;
+package com.awarmisland.android.richedittext.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.awarmisland.android.richedittext.bean.FontStyle;
+import com.awarmisland.android.richedittext.R;
+import com.awarmisland.android.richedittext.handle.Utils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
