@@ -13,5 +13,9 @@
 主要实现方式:
 1.EditText + Span 的实现方式
 
+效果图
+
+![image](https://github.com/awarmisland/RichEditText/blob/master/Screenrecorder-2018-09-10-15-37-37-460.gif)
+
 
 [我的博客](https://blog.csdn.net/ljzdyh)
