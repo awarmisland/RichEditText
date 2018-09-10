@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 字体大小设置面板
+ * Created by awarmisland on 2018/9/10.
  */
 public class FontSizeSelectView extends LinearLayout{
 

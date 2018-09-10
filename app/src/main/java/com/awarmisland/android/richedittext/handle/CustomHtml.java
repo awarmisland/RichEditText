@@ -1,14 +1,10 @@
 package com.awarmisland.android.richedittext.handle;
 
-import android.app.Application;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
@@ -29,29 +25,14 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-
-import com.awarmisland.android.richedittext.CustomApplication;
-import com.awarmisland.android.richedittext.R;
-
+import com.awarmisland.android.richedittext.bean.FontStyle;
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+/**
+ * Created by awarmisland on 2018/9/10.
+ */
 public class CustomHtml {
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
@@ -455,50 +436,73 @@ public class CustomHtml {
             next++;
         }
     }
-
     private static void withinBlockquoteConsecutive(StringBuilder out, Spanned text, int start,
                                                     int end) {
-        out.append("<p").append(getTextDirection(text, start, end)).append(">");
-
         int next;
         for (int i = start; i < end; i = next) {
+            boolean addbr =false;
             next = TextUtils.indexOf(text, '\n', i, end);
             if (next < 0) {
                 next = end;
             }
 
             int nl = 0;
-
             while (next < end && text.charAt(next) == '\n') {
                 nl++;
                 next++;
+                addbr=true;
             }
-
             withinParagraph(out, text, i, next - nl);
-
-            if (nl == 1) {
-                out.append("<br>\n");
-            } else {
-                for (int j = 2; j < nl; j++) {
-                    out.append("<br>");
-                }
-                if (next != end) {
-                    /* Paragraph should be closed and reopened */
-                    out.append("</p>\n");
-                    out.append("<p").append(getTextDirection(text, start, end)).append(">");
-                }
+            //支持换行
+            if(addbr){
+                out.append("<br>");
             }
         }
-
-        out.append("</p>\n");
     }
+//    private static void withinBlockquoteConsecutive(StringBuilder out, Spanned text, int start,
+//                                                    int end) {
+//        out.append("<p").append(getTextDirection(text, start, end)).append(">");
+//
+//        int next;
+//        for (int i = start; i < end; i = next) {
+//            next = TextUtils.indexOf(text, '\n', i, end);
+//            if (next < 0) {
+//                next = end;
+//            }
+//
+//            int nl = 0;
+//
+//            while (next < end && text.charAt(next) == '\n') {
+//                nl++;
+//                next++;
+//            }
+//
+//            withinParagraph(out, text, i, next - nl);
+//
+//            if (nl == 1) {
+//                out.append("<br>\n");
+//            } else {
+//                for (int j = 2; j < nl; j++) {
+//                    out.append("<br>");
+//                }
+//                if (next != end) {
+//                    /* Paragraph should be closed and reopened */
+//                    out.append("</p>\n");
+//                    out.append("<p").append(getTextDirection(text, start, end)).append(">");
+//                }
+//            }
+//        }
+//
+//        out.append("</p>\n");
+//    }
 
     private static void withinParagraph(StringBuilder out, Spanned text, int start, int end) {
         int next;
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, CharacterStyle.class);
             CharacterStyle[] style = text.getSpans(i, next, CharacterStyle.class);
-
+            AbsoluteSizeSpan tmp_rel_span = null;
+            ForegroundColorSpan tmp_fColor_span =null;
             for (int j = 0; j < style.length; j++) {
                 if (style[j] instanceof StyleSpan) {
                     int s = ((StyleSpan) style[j]).getStyle();
@@ -527,7 +531,8 @@ public class CustomHtml {
                     out.append("<u>");
                 }
                 if (style[j] instanceof StrikethroughSpan) {
-                    out.append("<span style=\"text-decoration:line-through;\">");
+//                    out.append("<span style=\"text-decoration:line-through;\">");
+                    out.append("<strike>");
                 }
                 if (style[j] instanceof URLSpan) {
                     out.append("<a href=\"");
@@ -543,23 +548,25 @@ public class CustomHtml {
                     i = next;
                 }
                 if (style[j] instanceof AbsoluteSizeSpan) {
-                    AbsoluteSizeSpan s = ((AbsoluteSizeSpan) style[j]);
-                    float sizeDip = s.getSize();
-                    if (!s.getDip()) {
-                        Application application = CustomApplication.currentApplication();
-                        sizeDip /= application.getResources().getDisplayMetrics().density;
-                    }
-
-                    // px in CSS is the equivalance of dip in Android
-                    out.append(String.format("<span style=\"font-size:%.0fpx\";>", sizeDip));
+                    tmp_rel_span= ((AbsoluteSizeSpan) style[j]);
+//                    AbsoluteSizeSpan s = ((AbsoluteSizeSpan) style[j]);
+//                    float sizeDip = s.getSize();
+//                    if (!s.getDip()) {
+//                        Application application = CustomApplication.currentApplication();
+//                        sizeDip /= application.getResources().getDisplayMetrics().density;
+//                    }
+//
+//                    // px in CSS is the equivalance of dip in Android
+//                    out.append(String.format("<span style=\"font-size:%.0fpx\";>", sizeDip));
                 }
                 if (style[j] instanceof RelativeSizeSpan) {
                     float sizeEm = ((RelativeSizeSpan) style[j]).getSizeChange();
                     out.append(String.format("<span style=\"font-size:%.2fem;\">", sizeEm));
                 }
                 if (style[j] instanceof ForegroundColorSpan) {
-                    int color = ((ForegroundColorSpan) style[j]).getForegroundColor();
-                    out.append(String.format("<span style=\"color:#%06X;\">", 0xFFFFFF & color));
+                    tmp_fColor_span = ((ForegroundColorSpan) style[j]);
+//                    int color = ((ForegroundColorSpan) style[j]).getForegroundColor();
+//                    out.append(String.format("<span style=\"color:#%06X;\">", 0xFFFFFF & color));
                 }
                 if (style[j] instanceof BackgroundColorSpan) {
                     int color = ((BackgroundColorSpan) style[j]).getBackgroundColor();
@@ -567,27 +574,51 @@ public class CustomHtml {
                             0xFFFFFF & color));
                 }
             }
-
+            //处理字体 颜色
+            StringBuilder style_font = new StringBuilder();
+            if(tmp_fColor_span!=null||tmp_rel_span!=null){
+                style_font.append("<font ");
+            }
+            //颜色
+            if(tmp_fColor_span!=null){
+                style_font.append(String.format("color='#%06X' ", 0xFFFFFF &  tmp_fColor_span.getForegroundColor()));
+            }
+            //字体
+            if(tmp_rel_span!=null){
+                String value = "16px";
+                if(tmp_rel_span.getSize()== FontStyle.BIG){
+                    value="18px";
+                }else if(tmp_rel_span.getSize()==FontStyle.SMALL){
+                    value="14px";
+                }
+                style_font.append("style='font-size:"+value+";'");
+            }
+            if(style_font.length()>0){
+                out.append(style_font+">");
+            }
             withinStyle(out, text, i, next);
-
+            if(style_font.length()>0){
+                out.append("</font>");
+            }
             for (int j = style.length - 1; j >= 0; j--) {
                 if (style[j] instanceof BackgroundColorSpan) {
                     out.append("</span>");
                 }
                 if (style[j] instanceof ForegroundColorSpan) {
-                    out.append("</span>");
+//                    out.append("</span>");
                 }
                 if (style[j] instanceof RelativeSizeSpan) {
                     out.append("</span>");
                 }
                 if (style[j] instanceof AbsoluteSizeSpan) {
-                    out.append("</span>");
+//                    out.append("</span>");
                 }
                 if (style[j] instanceof URLSpan) {
                     out.append("</a>");
                 }
                 if (style[j] instanceof StrikethroughSpan) {
-                    out.append("</span>");
+//                    out.append("</span>");
+                    out.append("</strike>");
                 }
                 if (style[j] instanceof UnderlineSpan) {
                     out.append("</u>");
@@ -618,41 +649,45 @@ public class CustomHtml {
             }
         }
     }
-
-    private static void withinStyle(StringBuilder out, CharSequence text,
-                                    int start, int end) {
-        for (int i = start; i < end; i++) {
-            char c = text.charAt(i);
-
-            if (c == '<') {
-                out.append("&lt;");
-            } else if (c == '>') {
-                out.append("&gt;");
-            } else if (c == '&') {
-                out.append("&amp;");
-            } else if (c >= 0xD800 && c <= 0xDFFF) {
-                if (c < 0xDC00 && i + 1 < end) {
-                    char d = text.charAt(i + 1);
-                    if (d >= 0xDC00 && d <= 0xDFFF) {
-                        i++;
-                        int codepoint = 0x010000 | (int) c - 0xD800 << 10 | (int) d - 0xDC00;
-                        out.append("&#").append(codepoint).append(";");
-                    }
-                }
-            } else if (c > 0x7E || c < ' ') {
-                out.append("&#").append((int) c).append(";");
-            } else if (c == ' ') {
-                while (i + 1 < end && text.charAt(i + 1) == ' ') {
-                    out.append("&nbsp;");
-                    i++;
-                }
-
-                out.append(' ');
-            } else {
-                out.append(c);
-            }
-        }
+    private static void withinStyle(StringBuilder out, CharSequence text, int start, int end) {
+        out.append(text.subSequence(start, end));
     }
+//    private static void withinStyle(StringBuilder out, CharSequence text,
+//                                    int start, int end) {
+//        for (int i = start; i < end; i++) {
+//            char c = text.charAt(i);
+//
+//            if (c == '<') {
+//                out.append("&lt;");
+//            } else if (c == '>') {
+//                out.append("&gt;");
+//            } else if (c == '&') {
+//                out.append("&amp;");
+//            } else if (c >= 0xD800 && c <= 0xDFFF) {
+//                if (c < 0xDC00 && i + 1 < end) {
+//                    char d = text.charAt(i + 1);
+//                    if (d >= 0xDC00 && d <= 0xDFFF) {
+//                        i++;
+//                        int codepoint = 0x010000 | (int) c - 0xD800 << 10 | (int) d - 0xDC00;
+//                        out.append("&#").append(codepoint).append(";");
+//                    }
+//                }
+//            } else if (c > 0x7E || c < ' ') {
+//                out.append("&#").append((int) c).append(";");
+//            } else if (c == ' ') {
+//                while (i + 1 < end && text.charAt(i + 1) == ' ') {
+//                    out.append("&nbsp;");
+//                    i++;
+//                }
+//
+//                out.append(' ');
+//            } else {
+//                out.append(c);
+//            }
+//        }
+//    }
+
+
 }
 
 

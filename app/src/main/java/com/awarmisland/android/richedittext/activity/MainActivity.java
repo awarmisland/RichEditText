@@ -20,7 +20,6 @@ import com.awarmisland.android.richedittext.R;
 import com.awarmisland.android.richedittext.view.RichEditText;
 import com.awarmisland.android.richedittext.handle.Utils;
 import com.awarmisland.android.richedittext.handle.CustomHtml;
-import com.awarmisland.android.richedittext.handle.HtmlParser;
 import com.awarmisland.android.richedittext.handle.RichEditImageGetter;
 
 import butterknife.BindView;
@@ -28,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- *
+ * create by awarmisland
  */
 public class MainActivity extends AppCompatActivity implements FontStylePanel.OnFontPanelListener
 ,RichEditText.OnSelectChangeListener {
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements FontStylePanel.On
 
     @OnClick(R.id.btn_right)
     protected void btn_right_onClick(){
-        String content = HtmlParser.toHtml(richEditText.getEditableText());
+        String content = CustomHtml.toHtml(richEditText.getEditableText(),CustomHtml.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
         Log.d("richText","span转html:"+content);
         Intent intent = new Intent(this,WebviewActivity.class);
         intent.putExtra("content",content);

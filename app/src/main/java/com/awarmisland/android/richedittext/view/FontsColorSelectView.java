@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 颜色选择
+ * Created by awarmisland on 2018/9/10.
  */
 public class FontsColorSelectView extends LinearLayout implements
         View.OnClickListener{

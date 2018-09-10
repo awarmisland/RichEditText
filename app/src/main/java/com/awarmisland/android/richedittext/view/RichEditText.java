@@ -25,7 +25,7 @@ import java.util.List;
 
 
 /**
- * ljz
+ * awarmisland
  * RichEditText 富文本
  */
 public class RichEditText extends AppCompatEditText implements View.OnClickListener{

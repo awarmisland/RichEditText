@@ -15,8 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * ljz
- * 字样式板
+ * Created by awarmisland on 2018/9/10.
  */
 public class FontStylePanel extends LinearLayout {
     private Context mContext;

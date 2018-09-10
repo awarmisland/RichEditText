@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 字体加粗 斜体 选择
+ * Created by awarmisland on 2018/9/10.
  */
 public class FontStyleSelectView extends LinearLayout {
     private Context mContext;

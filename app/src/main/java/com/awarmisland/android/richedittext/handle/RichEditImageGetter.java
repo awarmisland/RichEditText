@@ -23,7 +23,9 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.util.HashSet;
-
+/**
+ * Created by awarmisland on 2018/9/10.
+ */
 public class RichEditImageGetter implements Html.ImageGetter {
     private HashSet<Target> targets;
     private HashSet<GifDrawable> gifDrawables;

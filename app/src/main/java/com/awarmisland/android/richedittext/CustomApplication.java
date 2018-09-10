@@ -1,7 +1,9 @@
 package com.awarmisland.android.richedittext;
 
 import android.app.Application;
-
+/**
+ * Created by awarmisland on 2018/9/10.
+ */
 public class CustomApplication extends Application {
     private static CustomApplication application;
     @Override

@@ -45,8 +45,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-class CustomHtmlToSpannedConverter implements ContentHandler {
+/**
+ * Created by awarmisland on 2018/9/10.
+ */
+public class CustomHtmlToSpannedConverter implements ContentHandler {
 
     private static final float[] HEADING_SIZES = {
             1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f,
