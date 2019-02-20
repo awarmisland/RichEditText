@@ -55,9 +55,10 @@ public class RichEditText extends AppCompatEditText implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        int start = getSelectionStart();
-        if(start<0){
-            start=0;
+        int start = getSelectionStart()-1;
+        if(start==-1){start=0;}
+        if(start<-1){
+            return;
         }
         FontStyle fontStyle = getFontStyle(start,start);
         setBold(fontStyle.isBold);

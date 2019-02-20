@@ -4,8 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.awarmisland.android.richedittext.R;
 import com.awarmisland.android.richedittext.view.RichEditText;
@@ -16,6 +22,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImagePlate {
     private Context mContext;
@@ -53,13 +61,29 @@ public class ImagePlate {
     public void image(Uri uri, Bitmap pic) {
         String img_str="img";
         int start = view.getSelectionStart();
-        SpannableString ss = new SpannableString("\nimg\n");
+        SpannableString ss = new SpannableString("\nimg\n\n");
         RichImageSpan myImgSpan = new RichImageSpan(mContext, pic, uri);
         ss.setSpan(myImgSpan, 1, img_str.length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         view.getEditableText().insert(start, ss);// 设置ss要添加的位置
+        //设置点击事件
+        setClick(start+1,start+ss.length()-2,uri.getPath());
+
         view.requestLayout();
         view.requestFocus();
-//        setClick(ss.getSpanStart(myImgSpan),ss.getSpanEnd(myImgSpan),img_str);
+    }
+
+    public void setClick(int start,int end ,final String path){
+        view.setMovementMethod(LinkMovementMethod.getInstance());
+        ClickableSpan click_span = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+//                view.clearFocus(); //跳转时候弹键盘
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+                Toast.makeText(mContext,path,Toast.LENGTH_SHORT).show();
+            }
+        };
+        view.getEditableText().setSpan(click_span,start,end,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public static Bitmap zoomBitmapToFixWidth(Bitmap bitmap, int maxWidth) {
